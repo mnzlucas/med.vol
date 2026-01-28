@@ -1,0 +1,66 @@
+# ======================
+# Maven
+# ======================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ======================
+# Spring Boot
+# ======================
+*.log
+logs/
+spring.log
+
+# ======================
+# Flyway
+# ======================
+flyway.conf
+
+# ======================
+# Java
+# ======================
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# ======================
+# IntelliJ IDEA
+# ======================
+.idea/
+*.iml
+out/
+
+# ======================
+# Eclipse / STS (caso alguém use)
+# ======================
+.classpath
+.project
+.settings/
+
+# ======================
+# VS Code
+# ======================
+.vscode/
+
+# ======================
+# OS
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Environment variables
+# ======================
+.env
+.env.*
+application-*.yml
+application-*.properties
+
+# ======================
+# Database / Local
+# ======================
+*.db
+*.sqlite
+data/
