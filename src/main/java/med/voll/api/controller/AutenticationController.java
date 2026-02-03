@@ -3,6 +3,8 @@ package med.voll.api.controller;
 import jakarta.validation.Valid;
 import med.voll.api.domain.paciente.*;
 import med.voll.api.domain.usuario.AutenticationDTO;
+import med.voll.api.domain.usuario.Usuario;
+import med.voll.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +23,14 @@ public class AutenticationController {
     @Autowired
     private AuthenticationManager authManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid AutenticationDTO data) {
 
         var token = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var authentication = authManager.authenticate(token);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(tokenService.gerarToken((Usuario) authentication.getPrincipal()));
     }
 }
