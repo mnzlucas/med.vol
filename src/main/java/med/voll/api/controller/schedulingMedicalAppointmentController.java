@@ -1,8 +1,8 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.domain.scheduling.schedulingDetaisDTO;
-import med.voll.api.domain.scheduling.schedulingMedicalAppointmentControllerDTO;
+import med.voll.api.domain.scheduling.SchedulingDetaisDTO;
+import med.voll.api.domain.scheduling.SchedulingMedicalAppointmentControllerDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ public class schedulingMedicalAppointmentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity schedulingMedicalAppointment(@RequestBody @Valid schedulingMedicalAppointmentControllerDTO data) {
-        return ResponseEntity.ok(new schedulingDetaisDTO(null,data.idMedico(), data.idPaciente(), data.dataHora()));
+    public ResponseEntity schedulingMedicalAppointment(@RequestBody @Valid SchedulingMedicalAppointmentControllerDTO data) {
+        return ResponseEntity.ok(new SchedulingDetaisDTO(null,data.idMedico(), data.idPaciente(), data.dataHora()));
     }
 }
