@@ -1,5 +1,6 @@
 package med.voll.api.domain.medico;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,10 +18,16 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
         AND m.especialidade = :especialidade
         AND m.id NOT IN (
             SELECT c.medico.id FROM SchedulingAppointment c
-            WHERE c.data_consulta = :dateTime
+            WHERE c.dataConsulta = :dataConsulta
         )
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         limit 1
     """)
-    Medico findRandomlyActiveByEspecialidadeAndAvailable(Especialidade especialidade, LocalDateTime dateTime);
+    Medico findRandomlyActiveByEspecialidadeAndAvailable(Especialidade especialidade, LocalDateTime dataConsulta);
+
+    @Query("""
+        SELECT m.ativo FROM Medico m
+        WHERE m.id = :id
+    """)
+    boolean findAtivoById(@NotNull Long id);
 }

@@ -7,7 +7,7 @@ import med.voll.api.domain.medico.Especialidade;
 import java.time.LocalDateTime;
 
 public record SchedulingMedicalAppointmentControllerDTO(
-        @NotNull
+
         Long idMedico,
         @NotNull
         Long idPaciente,
