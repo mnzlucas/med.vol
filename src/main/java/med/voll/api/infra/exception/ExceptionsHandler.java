@@ -1,6 +1,8 @@
 package med.voll.api.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import med.voll.api.validator.ValidatorException;
+import med.voll.api.validator.ValidatorSchedulingAppointment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +24,13 @@ public class ExceptionsHandler {
         var erros = ex.getFieldErrors();
 
         return ResponseEntity.badRequest().body(erros.stream().map(ValidationErrorDTO::new).toList());
+
+    }
+
+   @ExceptionHandler(ValidatorException.class)
+    public ResponseEntity handleValidatorExceptions(ValidatorException ex) {
+
+        return ResponseEntity.badRequest().body(ex.getMessage());
 
     }
 
