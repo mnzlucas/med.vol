@@ -23,13 +23,17 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        //configure security statelless and allow posts to /login and set SecurityFilter before UsernamePasswordAuthenticationFilter
+        //configure security statelless and allow posts to /login and set SecurityFilter before UsernamePasswordAuthenticationFilter and allow all methods to springdoc
 
         http.csrf(crsf -> crsf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.POST, "/login").permitAll()
+                                .requestMatchers(
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
