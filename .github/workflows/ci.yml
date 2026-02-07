@@ -14,7 +14,7 @@ jobs:
         env:
           POSTGRES_DB: vollmed_api_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD : ${{ secrets.DB_PASSWORD }}
+          POSTGRES_PASSWORD : postgres
         ports:
           - 5432:5432
         options: >-
@@ -36,6 +36,6 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           DB_URL: jdbc:postgresql://localhost:5432/vollmed_api_test
           DB_USERNAME: postgres
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET_DEV: ${{ secrets.JWT_SECRET_DEV }}
+          DB_PASSWORD: postgres
+          JWT_SECRET_DEV: 12345678
         run: mvn clean test
