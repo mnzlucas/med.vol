@@ -7,11 +7,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: vollmed_api_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD : postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
-      - name: Build
-        run: mvn clean compile
+
+      - name: Run tests
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/vollmed_api_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          JWT_SECRET_DEV: 12345678
+        run: mvn clean test
