@@ -11,4 +11,7 @@ public record SchedulingDetaisDTO(
         LocalDateTime dataHora,
         Especialidade especialidade
 ) {
+    public SchedulingDetaisDTO(SchedulingAppointment appointment) {
+        this(appointment.getId(), appointment.getMedico().getId(), appointment.getPaciente().getId(), appointment.getDataConsulta(), appointment.getMedico().getEspecialidade());
+    }
 }

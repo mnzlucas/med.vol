@@ -5,10 +5,12 @@ import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
 import med.voll.api.validator.ValidatorException;
+import med.voll.api.validator.ValidatorSchedulingAppointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SchedulingAppointmentService {
@@ -22,7 +24,10 @@ public class SchedulingAppointmentService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    public void scheduleAppointment(SchedulingMedicalAppointmentControllerDTO data) {
+    @Autowired
+    private List<ValidatorSchedulingAppointment> schedulingAppointmentValidators;
+
+    public SchedulingDetaisDTO scheduleAppointment(SchedulingMedicalAppointmentControllerDTO data) {
         if (!pacienteRepository.existsById(data.idPaciente())) {
             throw new ValidatorException("Id do paciente informado não existe!");
         }
@@ -33,6 +38,8 @@ public class SchedulingAppointmentService {
             throw new ValidatorException("Id do médico informado não existe!");
         }
 
+        schedulingAppointmentValidators.forEach(validator -> validator.validate(data));
+
         var paciente = pacienteRepository.getReferenceById(data.idPaciente());
         var medico = handleGettingMedicByIdOrChoosingItRandomly(data);
         var appointment = new SchedulingAppointment(
@@ -42,13 +49,14 @@ public class SchedulingAppointmentService {
                 data.dataHora()
         );
         schedulingRepository.save(appointment);
+        return new SchedulingDetaisDTO(appointment);
     }
 
     // handle Getting Medic By Id Or Choosing It Randomly
     private Medico handleGettingMedicByIdOrChoosingItRandomly(SchedulingMedicalAppointmentControllerDTO data) {
         Long idMedico = data.idMedico();
         Especialidade especialidade = data.especialidade();
-        LocalDateTime dataHora = data.dataHora();
+        LocalDateTime dataConsulta = data.dataHora();
 
         if (idMedico != null) {
             return medicoRepository.getReferenceById(idMedico);
@@ -58,9 +66,9 @@ public class SchedulingAppointmentService {
             throw new ValidatorException("Especialidade é obrigatória quando o médico não for escolhido!");
         }
 
-        var medicSpecialistAvailable = medicoRepository.findRandomlyActiveByEspecialidadeAndAvailable(especialidade, dataHora);
+        var medicSpecialistAvailable = medicoRepository.findRandomlyActiveByEspecialidadeAndAvailable(especialidade, dataConsulta);
         if (medicSpecialistAvailable == null) {
-            throw new ValidatorException("Não há médicos disponíveis para a especialidade " + especialidade + " na data " + dataHora);
+            throw new ValidatorException("Não há médicos disponíveis para a especialidade " + especialidade + " na data " + dataConsulta);
         }
         return medicSpecialistAvailable;
     }
