@@ -16,3 +16,4 @@ Na raiz do projeto, execute:
 ```
 
 A aplicação Spring Boot será iniciada usando as configurações locais do projeto.
+Mantido com apoio do mahiru-command.
